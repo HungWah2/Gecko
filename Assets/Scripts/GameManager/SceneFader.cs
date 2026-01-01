@@ -3,23 +3,11 @@ using System.Collections;
 
 public class SceneFader : MonoBehaviour
 {
-    public static SceneFader Instance { get; private set; }
-
     public CanvasGroup canvasGroup;
     public float fadeDuration = 0.5f;
 
     void Awake()
     {
-        // singleton pattern
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-
         if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
 
         // Ensure known, non-blocking start state

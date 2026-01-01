@@ -83,7 +83,7 @@ public class InventoryManager : MonoBehaviour
                 GameManager.Instance.AudioInstance.PlayOpenInventory();
 
             //Show amount of money when open inventory
-            MoneyManager.Instance.ShowMoneyUI();
+            GameManager.Instance.MoneyManagerInstance.ShowMoneyUI();
 
             //time stop while player open inventory
             Time.timeScale = 0f;
@@ -104,7 +104,7 @@ public class InventoryManager : MonoBehaviour
                 GameManager.Instance.AudioInstance.PlayCloseInventory();
 
             //Stop showing amount of money when close inventory
-            MoneyManager.Instance.HideMoneyUI();
+            GameManager.Instance.MoneyManagerInstance.HideMoneyUI();
 
             //time continue after player close inventory
             Time.timeScale = 1f;

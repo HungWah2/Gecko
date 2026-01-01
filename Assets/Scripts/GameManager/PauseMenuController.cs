@@ -138,6 +138,7 @@ public class PauseMenuController : MonoBehaviour
         // Ensure timeScale restored
         Time.timeScale = 1f;
 
+        GameManager.Instance.ResetGameplayState();
         if (GameManager.Instance != null) GameManager.Instance.LoadSceneFromEdge(GameManager.Instance.mainMenuScene);
         else SceneManager.LoadScene("MainMenu");
     }

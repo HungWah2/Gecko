@@ -25,7 +25,8 @@ public class GameManager : MonoBehaviour
     public GameObject inventoryPrefab;
     public GameObject hotBarPrefab;
     public GameObject itemDatabasePrefab;
-    
+    public GameObject moneyManagerPrefab;
+
     /*Runtime Instances*/
     SceneFader fader;
     GameObject eventSystem;
@@ -35,12 +36,14 @@ public class GameManager : MonoBehaviour
     InventoryManager inventory;
     GameObject hotBar;
     ItemDatabase itemDatabase;
+    MoneyManager moneyManager;
 
     /*External Use*/
     public AudioManager AudioInstance => audioManager;
     public GameObject PlayerInstance => player;
     public InventoryManager InventoryInstance => inventory;
     public ItemDatabase ItemDatabaseInstance => itemDatabase;
+    public MoneyManager MoneyManagerInstance => moneyManager;
 
 
     private void Awake()
@@ -128,6 +131,13 @@ public class GameManager : MonoBehaviour
         SpawnPauseMenu();
         SpawnHotBar();
         SpawnItemDatabase();
+        SpawnMoneyManager();
+
+        if (inventory != null && currentSave != null)
+            inventory.ApplyInventorySnapshot(currentSave.inventory);
+
+        if (moneyManager != null && currentSave != null)
+            moneyManager.ApplyMoneySnapshot(currentSave.money);
 
         // Apply save data AFTER spawning inventory and other systems
         if (currentSave != null)
@@ -213,6 +223,16 @@ public class GameManager : MonoBehaviour
                 rb.simulated = true;
         }
 
+        pendingEdgeMove = false;
+        pendingSpawnPoint = null;
+    }
+
+    public void ResetGameplayState()
+    {
+        // Spawn / edge logic
+        SpawnManager.lastSpawnPoint = null;
+
+        // Optional safety
         pendingEdgeMove = false;
         pendingSpawnPoint = null;
     }
@@ -349,6 +369,16 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(go);
     }
 
+    void SpawnMoneyManager()
+    {
+        if (moneyManagerPrefab == null || moneyManager != null) return;
+        GameObject go = Instantiate(moneyManagerPrefab);
+        moneyManager = go.GetComponent<MoneyManager>();
+        go.name = "MoneyManager_Instance";
+        DontDestroyOnLoad(go);
+    }
+
+
     // Destroy Method
     void DestroyGameplayInstances()
     {
@@ -357,12 +387,14 @@ public class GameManager : MonoBehaviour
         if (inventory != null) Destroy(inventory.gameObject);
         if (hotBar != null) Destroy(hotBar.gameObject);
         if (itemDatabase != null) Destroy(itemDatabase.gameObject);
+        if (moneyManager != null) Destroy(moneyManager.gameObject);
 
         player = null;
         pauseMenu = null;
         inventory = null;
         hotBar = null;
         itemDatabase = null;
+        moneyManager = null;
     }
 
 
@@ -390,6 +422,7 @@ public class GameManager : MonoBehaviour
         }
         
         currentSave.savedAtTicks = System.DateTime.UtcNow.Ticks;
+<<<<<<< HEAD
         
         // Save inventory
         if (inventory != null)
@@ -409,9 +442,100 @@ public class GameManager : MonoBehaviour
             currentSave.missions = MissionManager.Instance.GetMissionSnapshot();
             Debug.Log($"[GameManager] Saved {currentSave.missions.Count} missions");
         }
+=======
+        currentSave.inventory = inventory.GetInventorySnapshot();
+        currentSave.money = moneyManager.GetMoneySnapshot();
+>>>>>>> 41bc57b2514121a586a5074ee62989b0f81fc137
 
         SaveSystem.SaveSlot(currentSlot, currentSave);
         Debug.Log($"[SAVE] {reason}");
+    }
+
+
+    
+
+    void RespawnFromSave()
+    {
+        StartCoroutine(RespawnFromSaveRoutine());
+    }
+
+    IEnumerator RespawnFromSaveRoutine()
+    {
+        if (currentSave == null || PlayerInstance == null)
+        {
+            Debug.LogError("Respawn failed: missing save or player");
+            yield break;
+        }
+
+        // 1. Disable player control
+        var pm = PlayerInstance.GetComponent<PlayerMovement>();
+        if (pm != null) pm.canMove = false;
+
+        // 2. Fade out
+        yield return FadeOut();
+
+        int savedScene = currentSave.sceneBuildIndex;
+        int activeScene = SceneManager.GetActiveScene().buildIndex;
+
+        // 3. Change scene ONLY if needed
+        if (savedScene != activeScene)
+        {
+            yield return SceneManager.LoadSceneAsync(savedScene);
+        }
+
+        // 4. Respawn at saved position
+        Vector3 pos = new Vector3(
+            currentSave.playerX,
+            currentSave.playerY,
+            0f
+        );
+
+        var rb = PlayerInstance.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.simulated = false;
+        }
+
+        PlayerInstance.transform.position = pos;
+
+        if (rb != null)
+            rb.simulated = true;
+
+        // 5. Reset boss room
+        ResetBossRoom();
+
+        // 6. Apply death penalty & save immediately
+        ApplyDeathPenalty();
+        SaveGameEvent("Death Respawn");
+
+        // 7. Fade in
+        yield return FadeIn();
+
+        // 8. Re-enable control
+        if (pm != null) pm.canMove = true;
+    }
+
+
+    void ResetBossRoom()
+    {
+        var boss = FindFirstObjectByType<MantisBossController>();
+        if (boss != null)
+            boss.ResetBoss();
+    }
+
+    void ApplyDeathPenalty()
+    {
+        // Money loss
+        if (moneyManager != null)
+        {
+            int lost = Mathf.RoundToInt(moneyManager.Money * 0.25f);
+            moneyManager.SetMoney(moneyManager.Money - lost);
+        }
+
+        // Restore HP
+        var health = PlayerInstance.GetComponent<PlayerHealth>();
+        health.SetHealth(health.maxHP); // or partial HP
     }
 
 

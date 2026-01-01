@@ -87,8 +87,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1356362289
+  m_SortingLayer: 13
   m_SortingOrder: 0
   m_Sprite: {fileID: 1632667264872360640, guid: 4d68242a5cd6c0e449860205761e7b50, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -188,7 +188,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.5, y: 1.25}
+    oldSize: {x: 1.125, y: 0.9375}
     newSize: {x: 1.5, y: 0.8333333}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -292,7 +292,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d52f8bf2435ff394689269326ae8f9d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlyingEnemy
-  player: {fileID: 2142017325046519243, guid: a7a06756987218f41976d5a3fadcae6f, type: 3}
   homePosition: {fileID: 0}
   chaseZone: {fileID: 0}
   updateRate: 0.5

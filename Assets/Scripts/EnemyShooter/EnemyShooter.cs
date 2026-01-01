@@ -5,11 +5,11 @@ public class EnemyShooter : MonoBehaviour
 {
     public GameObject projectilePrefab;
     public Transform firePoint;
-    public Transform player;
     public CircleCollider2D shootZone;
 
     [SerializeField] private float shootCooldown = 15f;
 
+    private Transform player;
     private Animator animator;
 
     private bool isPlayer = false;
@@ -19,6 +19,12 @@ public class EnemyShooter : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
+    }
+
+    private void Start()
+    {
+        if (GameManager.Instance.PlayerInstance != null)
+            player = GameManager.Instance.PlayerInstance.transform;
     }
 
     private void Update()

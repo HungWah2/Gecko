@@ -20,7 +20,5 @@ public class PlayerLoader : MonoBehaviour
             
             Debug.Log($"[PlayerLoader] Loaded health: {save.playerHealth}/{save.playerMaxHealth}");
         }
-
-        // any other apply steps...
     }
 }

@@ -9,7 +9,7 @@ public class MoneyDrop : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player")) // Fixed: Use collision.gameObject to access CompareTag
         {
-            MoneyManager.Instance.AddMoney(amount);
+            GameManager.Instance.MoneyManagerInstance.AddMoney(amount);
             Destroy(gameObject);
         }
     }

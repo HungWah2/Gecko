@@ -114,8 +114,9 @@ public class ShopSlot : MonoBehaviour
         }
 
         // Check if player has enough money
-        if (MoneyManager.Instance.Money >= price)
+        if (GameManager.Instance.MoneyManagerInstance.Money >= price)
         {
+<<<<<<< HEAD
             Debug.Log($"[ShopSlot] Player has enough money ({MoneyManager.Instance.Money} >= {price})");
             
             // Try to add item to inventory first (check if there's space)
@@ -159,6 +160,15 @@ public class ShopSlot : MonoBehaviour
                 // Inventory is full
                 Debug.LogWarning($"[ShopSlot] ? Cannot buy {item.itemName} - Inventory is full! (leftover: {leftover})");
             }
+=======
+            // Deduct money
+            GameManager.Instance.MoneyManagerInstance.AddMoney(-price);
+
+            // Add item to inventory
+            GameManager.Instance.InventoryInstance.AddItem(item, 1);
+
+            Debug.Log($"Bought: {item.itemName} for {price} coins.");
+>>>>>>> 41bc57b2514121a586a5074ee62989b0f81fc137
         }
         else
         {

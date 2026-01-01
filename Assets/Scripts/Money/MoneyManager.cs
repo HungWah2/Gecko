@@ -3,25 +3,13 @@ using TMPro;
 
 public class MoneyManager : MonoBehaviour
 {
-    public static MoneyManager Instance;
     public int Money { get; private set; }
     public GameObject moneyUI;
     public TMP_Text moneyText;
 
-    private const string MoneyKey = "PlayerMoney";
-
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            moneyUI.SetActive(false);
-            DontDestroyOnLoad(gameObject); // Persist across scenes
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        moneyUI.SetActive(false);
     }
 
     public int GetMoneySnapshot() => Money;
