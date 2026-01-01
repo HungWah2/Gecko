@@ -71,8 +71,8 @@ TagManager:
   - name: background detail 4
     uniqueID: 3822270967
     locked: 0
-  - name: water
-    uniqueID: 2556365333
+  - name: Money
+    uniqueID: 4160675601
     locked: 0
   - name: ground
     uniqueID: 825408081
@@ -82,6 +82,9 @@ TagManager:
     locked: 0
   - name: Enemy
     uniqueID: 2938605007
+    locked: 0
+  - name: water
+    uniqueID: 2556365333
     locked: 0
   - name: foreground
     uniqueID: 3751811361

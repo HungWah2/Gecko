@@ -1423,9 +1423,7 @@ MonoBehaviour:
   inventoryPrefab: {fileID: 3268646137699518073, guid: 3c8946373101fca478315ee7bc04caa2, type: 3}
   hotBarPrefab: {fileID: 6816503219407188691, guid: 53d6596440ee9034db915e2a2affedb2, type: 3}
   itemDatabasePrefab: {fileID: 9215023935252508914, guid: 292599dbf9f1a8d4b9d7700878cf1d78, type: 3}
-  player: {fileID: 0}
-  inventory: {fileID: 0}
-  itemDatabase: {fileID: 0}
+  moneyManagerPrefab: {fileID: 4761542236909632528, guid: bc5e533e3b88c7248949dbf0009d2334, type: 3}
 --- !u!4 &1255556863
 Transform:
   m_ObjectHideFlags: 0

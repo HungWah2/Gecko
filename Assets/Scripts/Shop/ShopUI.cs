@@ -43,7 +43,7 @@ public class ShopUI : MonoBehaviour
         shopPanel.SetActive(true);
         Time.timeScale = 0;
 
-        MoneyManager.Instance.ShowMoneyUI();
+        GameManager.Instance.MoneyManagerInstance.ShowMoneyUI();
 
         var player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerMovement>();
         if (player) player.canMove = false; // Use canMove instead of enabled
@@ -61,7 +61,7 @@ public class ShopUI : MonoBehaviour
         shopPanel.SetActive(false);
         Time.timeScale = 1;
 
-        MoneyManager.Instance.HideMoneyUI();
+        GameManager.Instance.MoneyManagerInstance.HideMoneyUI();
 
         // DON'T re-enable player movement here
         // The NPC will handle it when returning to choice panel or closing completely

@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerHealth : MonoBehaviour, IDamageable
 {
     [Header("Health")]
-    [SerializeField] private float maxHP = 5;
+    [SerializeField] public float maxHP = 5;
     [SerializeField] private bool destroyOnDeath = false;
 
     [Header("Invulnerability")]
@@ -178,17 +178,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private void Die()
     {
         OnDead?.Invoke();
-        if (destroyOnDeath)
-            Destroy(gameObject);
-        else
-        {
-            // Disable movement while respawning
-            var pm = GetComponent<PlayerMovement>();
-            if (pm != null) pm.enabled = false;
-
-            // Start respawn coroutine
-            StartCoroutine(RespawnWithLoading(0.4f));
-        }
+        GameManager.Instance.ResetGameplayState();
     }
 
     public void ForceRespawn(float delayBeforeLoading = 0.4f)
@@ -209,7 +199,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             PlayerCheckpointManager checkpointManager = FindFirstObjectByType<PlayerCheckpointManager>();
             Vector3 respawnPos;
             respawnPos = checkpointManager.GetCheckpoint();
-            Debug.Log($"Respawning player at {respawnPos.x}:{respawnPos.y}");
             pm.transform.position = respawnPos;
             pm.enabled = true;
             

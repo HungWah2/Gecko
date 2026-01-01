@@ -30,7 +30,6 @@ public class MantisBossController : MonoBehaviour, IDamageable
     public int maxHP = 25;
 
     [Header("Refs")]
-    public Transform player;
     public Animator anim;
     public AudioSource audioSource;
 
@@ -51,6 +50,7 @@ public class MantisBossController : MonoBehaviour, IDamageable
     bool dead = false;
     bool phaseTransitioning = false;
 
+    private Transform player;
     private BossAttack lastAttack = null;
     private bool animAttackFinished = false;
 
@@ -87,6 +87,12 @@ public class MantisBossController : MonoBehaviour, IDamageable
         UpdateHpUI();
 
         ApplyPhaseStats();
+    }
+
+    void Start()
+    {
+        if (GameManager.Instance.PlayerInstance != null)
+            player = GameManager.Instance.PlayerInstance.transform;
     }
 
     void UpdateHpUI()
@@ -437,6 +443,26 @@ public class MantisBossController : MonoBehaviour, IDamageable
     public void TakeDamage(int amount, Vector2? knockback = null)
     {
         TakeDamageFromPlayer(amount);
+    }
+
+    public void ResetBoss()
+    {
+        dead = false;
+        busy = false;
+        phaseTransitioning = false;
+        introRunning = false;
+        introCompleted = !requireIntroBeforeFight;
+
+        currentHP = requireIntroBeforeFight ? 0 : maxHP;
+        UpdateHpUI();
+
+        // Re-enable hitboxes
+        foreach (var c in GetComponentsInChildren<BoxCollider2D>())
+            if (c.isTrigger) c.enabled = true;
+
+        // Reset position if needed
+        if (spawnPoint != null)
+            transform.position = spawnPoint.position;
     }
 
 
